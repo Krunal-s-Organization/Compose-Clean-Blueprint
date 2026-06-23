@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Compose Clean Blueprint</string>
+
+    <!-- Screen titles -->
+    <string name="title_user_list_mvvm">Users (MVVM)</string>
+    <string name="title_user_list_mvi">Users (MVI)</string>
+    <string name="title_user_detail">User Detail</string>
+
+    <!-- Bottom navigation labels -->
+    <string name="nav_mvvm">MVVM</string>
+    <string name="nav_mvi">MVI</string>
+
+    <!-- Common UI -->
+    <string name="action_retry">Retry</string>
+    <string name="action_back">Back</string>
+    <string name="content_desc_user_avatar">User avatar</string>
+    <string name="state_empty_users">No users found.</string>
+    <string name="state_generic_error">Something went wrong.</string>
+    <string name="label_email">Email: %1$s</string>
+    <string name="label_phone">Phone: %1$s</string>
+</resources>

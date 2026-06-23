@@ -1,0 +1,7 @@
+<resources>
+    <!--
+        A minimal Material 3 base theme used only by the Android manifest before
+        Compose takes over. All runtime theming lives in `ui/theme/Theme.kt`.
+    -->
+    <style name="Theme.ComposeCleanBlueprint" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
