@@ -1,87 +1,129 @@
-# Compose Clean Blueprint
+# 🧱 Compose Clean Blueprint
 
-A production-ready **Jetpack Compose + Clean Architecture** template for Android, shipping working
-examples of **both MVVM and MVI** presentation patterns over the same domain and data layers.
-
-Clone it, rename the package, and start building features instead of wiring infrastructure.
+> **Production-ready Jetpack Compose + Clean Architecture template for Android.**  
+> Ships working examples of **both MVVM and MVI** over the same domain and data layers.  
+> Clone it, rename the package, and start building features — not infrastructure.
 
 ---
 
-## ✨ What's inside
+## 📑 Table of Contents
 
-- **Clean Architecture** — strict `presentation → domain → data` dependency direction.
-- **Two presentation patterns**, side by side, sharing one domain/data stack:
-  - **MVVM** with `StateFlow` + `UiState`.
-  - **MVI** with `Intent` / `State` / `Effect` and a `Channel` for one-time events.
-- **Offline-first repository** — Room is the single source of truth; the network refreshes it.
-- **Hilt** dependency injection wired end to end.
-- **Type-safe Navigation Compose** (serializable routes, no string parsing).
-- **Material 3** theming with dynamic color + dark mode.
-- **Version catalog** (`libs.versions.toml`) for centralized dependency management.
+- [What's Inside](#-whats-inside)
+- [Architecture](#-architecture)
+- [Module Layout](#-module--package-layout)
+- [Setup](#-setup)
+- [MVVM Pattern Guide](#-how-to-use-the-mvvm-template)
+- [MVI Pattern Guide](#-how-to-use-the-mvi-template)
+- [Tech Stack](#-tech-stack)
+- [Adding a New Feature](#-extending-add-a-new-feature-the-same-way)
+- [Common Gotchas](#-common-gotchas)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## ✨ What's Inside
+
+| Feature | Detail |
+|---|---|
+| **Clean Architecture** | Strict `presentation → domain → data` dependency direction |
+| **MVVM Pattern** | `StateFlow` + `UiState` — lightweight, great for most screens |
+| **MVI Pattern** | `Intent / State / Effect` + `Channel` — scales for complex screens |
+| **Offline-First** | Room is the single source of truth; network refreshes it |
+| **Hilt DI** | Dependency injection wired end to end |
+| **Type-Safe Navigation** | Serializable routes, zero string parsing |
+| **Material 3** | Dynamic color + dark mode support out of the box |
+| **Version Catalog** | `libs.versions.toml` — one place for all dependency versions |
+
+Both patterns share the **same domain and data layers** — pick the one that fits your screen, or use both in the same project.
 
 ---
 
 ## 🏛️ Architecture
 
-<img width="1024" height="1536" alt="ChatGPT Image Jun 24, 2026, 12_58_25 AM" src="https://github.com/user-attachments/assets/4cc81ceb-1194-481e-843f-ad2e5256344a" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4cc81ceb-1194-481e-843f-ad2e5256344a" alt="Compose Clean Blueprint Architecture Diagram" width="600"/>
+</p>
 
-CORE (cross-cutting): common/Resource, common/UiState, network/*, di/*
-```
+The architecture is split into **three layers** with a strict one-way dependency rule:
 
-**The golden rule:** dependencies point *inward*. `domain` knows nothing about Android, Room, or
-Retrofit. `presentation` and `data` depend on `domain`, never the reverse.
+| Layer | Contains | Depends On |
+|---|---|---|
+| **Presentation** | Screens, ViewModels (MVVM & MVI) | Domain only |
+| **Domain** | Models, Repository interfaces, UseCases | Nothing (framework-free) |
+| **Data** | Room, Retrofit, Repository implementations, Mappers | Domain only |
+| **Core** | Resource, UiState, Network, Hilt modules | — (cross-cutting) |
+
+> **The golden rule:** dependencies point *inward*.  
+> `domain` knows nothing about Android, Room, or Retrofit.  
+> `presentation` and `data` depend on `domain` — never the reverse.
 
 ---
 
-## 📁 Module / package layout
+## 📁 Module / Package Layout
 
 | Package | Responsibility |
-| --- | --- |
-| `core.common` | `Resource` (operation result) and `UiState` (screen state) + extensions. |
-| `core.network` | Retrofit/OkHttp construction and the auth/logging interceptor. |
-| `core.di` | Hilt modules (`AppModule`, `NetworkModule`) and dispatcher qualifiers. |
-| `data.local` | Room `AppDatabase`, `UserDao`, `UserEntity`. |
-| `data.remote` | `UserApi` (Retrofit) and `UserDto`. |
-| `data.repository` | `UserRepositoryImpl` — the offline-first implementation. |
-| `data.mapper` | Pure functions converting DTO ⇄ Entity ⇄ Domain. |
-| `domain.model` | Framework-free business models. |
-| `domain.repository` | Repository *interfaces* (contracts). |
-| `domain.usecase` | One business action per class. |
-| `presentation.mvvm` | MVVM screens, ViewModels, reusable components. |
-| `presentation.mvi` | MVI contract (`Intent`/`State`/`Effect`), ViewModel, screen. |
-| `presentation.navigation` | Type-safe routes, nav graph, bottom bar. |
-| `ui.theme` | Material 3 `Color`, `Type`, `Theme`. |
+|---|---|
+| `core.common` | `Resource` (operation result) and `UiState` (screen state) + extensions |
+| `core.network` | Retrofit/OkHttp construction and the auth/logging interceptor |
+| `core.di` | Hilt modules (`AppModule`, `NetworkModule`) and dispatcher qualifiers |
+| `data.local` | Room `AppDatabase`, `UserDao`, `UserEntity` |
+| `data.remote` | `UserApi` (Retrofit) and `UserDto` |
+| `data.repository` | `UserRepositoryImpl` — the offline-first implementation |
+| `data.mapper` | Pure functions converting DTO ⇄ Entity ⇄ Domain model |
+| `domain.model` | Framework-free business models |
+| `domain.repository` | Repository *interfaces* (contracts) |
+| `domain.usecase` | One business action per class |
+| `presentation.mvvm` | MVVM screens, ViewModels, reusable components |
+| `presentation.mvi` | MVI contract (`Intent`/`State`/`Effect`), ViewModel, screen |
+| `presentation.navigation` | Type-safe routes, nav graph, bottom bar |
+| `ui.theme` | Material 3 `Color`, `Type`, `Theme` |
 
 ---
 
 ## 🚀 Setup
 
 ### Prerequisites
-- **Android Studio** Ladybug (2024.2) or newer.
-- **JDK 17** (required by Android Gradle Plugin 8.7).
-- Android SDK Platform **35**.
+
+- **Android Studio** Ladybug (2024.2) or newer
+- **JDK 17** — required by Android Gradle Plugin 8.7
+- **Android SDK Platform 35**
 
 ### Steps
-1. Clone the repo and open it in Android Studio (or run `./gradlew assembleDebug`).
-2. Let Gradle sync — all dependencies resolve from the version catalog.
-3. Run the `app` configuration on a device/emulator (min SDK 24).
 
-The template ships pointing at the public
-[`jsonplaceholder.typicode.com`](https://jsonplaceholder.typicode.com/) API so it runs with zero
-configuration. Change the base URL in `app/build.gradle.kts`:
+```bash
+# 1. Clone the repo
+git clone https://github.com/your-username/compose-clean-blueprint.git
+
+# 2. Open in Android Studio and let Gradle sync
+#    All dependencies resolve from the version catalog automatically.
+
+# 3. Run on device or emulator (min SDK 24)
+./gradlew assembleDebug
+```
+
+The template points at the public [`jsonplaceholder.typicode.com`](https://jsonplaceholder.typicode.com/) API — it runs with **zero configuration**.
+
+To point at your own API, update `app/build.gradle.kts`:
 
 ```kotlin
 buildConfigField("String", "BASE_URL", "\"https://your.api/\"")
 ```
 
-See the **Setup checklist** at the bottom for everything to rename when adopting the template.
+### Setup Checklist (When Adopting the Template)
+
+- [ ] Rename the root package from `com.example.composeclean` to your package name
+- [ ] Update `applicationId` in `app/build.gradle.kts`
+- [ ] Replace `BASE_URL` with your API endpoint
+- [ ] Replace `User` domain model, DAO, and API with your own entities
+- [ ] Update app name in `strings.xml`
+- [ ] Remove or replace the sample `jsonplaceholder` API key/config
 
 ---
 
-## 🧩 How to use the MVVM template
+## 🧩 How to Use the MVVM Template
 
-MVVM here means: the ViewModel exposes **one immutable `UiState`** as a `StateFlow`, and the screen
-renders it declaratively.
+MVVM here means: the ViewModel exposes **one immutable `UiState`** as a `StateFlow`, and the screen renders it declaratively.
 
 ```kotlin
 @HiltViewModel
@@ -92,8 +134,8 @@ class UserListViewModel @Inject constructor(
     private val refreshTrigger = MutableStateFlow(0)
 
     val uiState: StateFlow<UiState<List<User>>> = refreshTrigger
-        .flatMapLatest { getUsersUseCase() }      // re-run on refresh
-        .map { it.toUiState() }                   // Resource → UiState
+        .flatMapLatest { getUsersUseCase() }   // re-run on refresh
+        .map { it.toUiState() }                // Resource → UiState
         .stateIn(viewModelScope, WhileSubscribed(5_000), UiState.loading())
 
     fun refresh() = refreshTrigger.update { it + 1 }
@@ -103,112 +145,226 @@ class UserListViewModel @Inject constructor(
 ```kotlin
 @Composable
 fun UserListScreen(viewModel: UserListViewModel = hiltViewModel()) {
-    // ALWAYS collectAsStateWithLifecycle — never the raw collectAsState.
+    // ✅ Always use collectAsStateWithLifecycle — never collectAsState
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    // render uiState.isLoading / uiState.data / uiState.errorMessage
+
+    when {
+        uiState.isLoading -> LoadingIndicator()
+        uiState.errorMessage != null -> ErrorState(uiState.errorMessage)
+        else -> UserList(users = uiState.data ?: emptyList())
+    }
 }
 ```
 
-**Use MVVM when** the screen is mostly displaying state and reacting to a handful of events. It's
-the lighter-weight option.
+**Use MVVM when** the screen mostly displays state and reacts to a handful of events. It's the lighter-weight option.
 
 ---
 
-## 🔁 How to use the MVI template
+## 🔁 How to Use the MVI Template
 
-MVI adds strict unidirectional flow: the UI sends **Intents**, the ViewModel reduces them into a
-single **State**, and one-time events go out as **Effects**.
+MVI adds strict unidirectional data flow: UI sends **Intents**, the ViewModel reduces them into a single **State**, and one-time events go out as **Effects**.
 
 ```kotlin
-// 1. Contract
-sealed interface UserIntent { data object Refresh; data class UserClicked(val userId: Int) }
-data class UserState(val isLoading: Boolean = false, val users: List<User> = emptyList(), ...)
-sealed interface UserEffect { data class NavigateToDetail(val userId: Int); data class ShowMessage(...) }
+// 1. Define the contract
+sealed interface UserIntent {
+    data object Refresh : UserIntent
+    data class UserClicked(val userId: Int) : UserIntent
+}
 
-// 2. ViewModel — single entry point + a Channel for effects
-fun onIntent(intent: UserIntent) { when (intent) { ... } }
-val state: StateFlow<UserState>
-val effects: Flow<UserEffect>      // backed by Channel(BUFFERED)
+data class UserState(
+    val isLoading: Boolean = false,
+    val users: List<User> = emptyList(),
+    val errorMessage: String? = null,
+)
+
+sealed interface UserEffect {
+    data class NavigateToDetail(val userId: Int) : UserEffect
+    data class ShowMessage(val message: String) : UserEffect
+}
 ```
 
 ```kotlin
+// 2. ViewModel — single entry point + Channel for effects
+@HiltViewModel
+class UserMviViewModel @Inject constructor(...) : ViewModel() {
+
+    private val _state = MutableStateFlow(UserState())
+    val state: StateFlow<UserState> = _state.asStateFlow()
+
+    private val _effects = Channel<UserEffect>(Channel.BUFFERED)
+    val effects: Flow<UserEffect> = _effects.receiveAsFlow()
+
+    fun onIntent(intent: UserIntent) {
+        when (intent) {
+            is UserIntent.Refresh -> loadUsers()
+            is UserIntent.UserClicked -> {
+                viewModelScope.launch {
+                    _effects.send(UserEffect.NavigateToDetail(intent.userId))
+                }
+            }
+        }
+    }
+}
+```
+
+```kotlin
+// 3. Screen — dispatch intents, collect effects with LaunchedEffect
 @Composable
 fun UserMviScreen(viewModel: UserMviViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
     LaunchedEffect(viewModel) {
-        viewModel.effects.collectLatest { effect -> /* navigate / snackbar */ }
+        viewModel.effects.collectLatest { effect ->
+            when (effect) {
+                is UserEffect.NavigateToDetail -> navController.navigate(...)
+                is UserEffect.ShowMessage -> snackbarHostState.showSnackbar(...)
+            }
+        }
     }
-    // dispatch: viewModel.onIntent(UserIntent.Refresh)
+
+    // Dispatch: viewModel.onIntent(UserIntent.Refresh)
 }
 ```
 
-**Use MVI when** the screen has complex, interdependent state and many event types, and you want an
-auditable, testable event log. It's more boilerplate but scales better for rich screens.
+**Use MVI when** the screen has complex, interdependent state and many event types. More boilerplate, but scales better for rich screens and is easier to test.
 
 ---
 
-## 🛠️ Tech stack
+## 🛠️ Tech Stack
 
 | Concern | Library |
-| --- | --- |
-| UI toolkit | Jetpack Compose (Material 3) |
+|---|---|
+| UI Toolkit | Jetpack Compose (Material 3) |
 | Language | Kotlin + Coroutines + Flow |
-| DI | Hilt |
-| Local DB | Room |
+| Dependency Injection | Hilt |
+| Local Database | Room |
 | Networking | Retrofit + OkHttp + kotlinx.serialization |
-| Navigation | Navigation Compose (type-safe) |
-| State | StateFlow / SharedFlow / Channel |
-| Image loading | Coil |
+| Navigation | Navigation Compose (type-safe, serializable routes) |
+| State Management | StateFlow / SharedFlow / Channel |
+| Image Loading | Coil |
 | Preferences | DataStore |
 | Build | Gradle (Kotlin DSL) + Version Catalog + KSP |
 
-Exact versions live in [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
+> Exact versions live in [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 
 ---
 
-## ➕ Extending: add a new feature the same way
+## ➕ Extending: Add a New Feature the Same Way
 
-Suppose you add a `Post` feature. Follow the dependency direction, inside-out:
+Follow the dependency direction — always build **inside-out** (domain first, data second, presentation last).
 
-1. **Domain** — `domain/model/Post.kt`, `domain/repository/PostRepository.kt`,
-   `domain/usecase/GetPostsUseCase.kt`.
-2. **Data** — `data/remote/dto/PostDto.kt` + `PostApi`, `data/local/entity/PostEntity.kt` + `PostDao`
-   (add it to `AppDatabase` and **bump the DB version + add a migration**),
-   `data/mapper/PostMapper.kt`, `data/repository/PostRepositoryImpl.kt`.
-3. **DI** — `@Binds PostRepository` in `AppModule`, `@Provides PostApi` in `NetworkModule`.
-4. **Presentation** — pick MVVM or MVI, copy the matching `users` / `mvi` package as a starting
-   point.
-5. **Navigation** — add a `@Serializable` route to `NavRoute` and a `composable<…>` entry to
-   `AppNavGraph`.
+Suppose you're adding a `Post` feature:
+
+**Step 1 — Domain layer**
+```
+domain/model/Post.kt
+domain/repository/PostRepository.kt       ← interface only
+domain/usecase/GetPostsUseCase.kt
+```
+
+**Step 2 — Data layer**
+```
+data/remote/dto/PostDto.kt
+data/remote/api/PostApi.kt
+data/local/entity/PostEntity.kt
+data/local/dao/PostDao.kt                 ← add to AppDatabase + bump DB version + add Migration
+data/mapper/PostMapper.kt
+data/repository/PostRepositoryImpl.kt
+```
+
+**Step 3 — Hilt DI**
+```kotlin
+// AppModule.kt
+@Binds abstract fun bindPostRepository(impl: PostRepositoryImpl): PostRepository
+
+// NetworkModule.kt
+@Provides fun providePostApi(retrofit: Retrofit): PostApi = retrofit.create(PostApi::class.java)
+```
+
+**Step 4 — Presentation layer**
+
+Pick MVVM or MVI. Copy the matching `users` or `mvi` package as a starting point and adapt.
+
+**Step 5 — Navigation**
+```kotlin
+// NavRoute.kt
+@Serializable data object Posts : NavRoute
+@Serializable data class PostDetail(val postId: Int) : NavRoute
+
+// AppNavGraph.kt
+composable<Posts> { PostListScreen() }
+composable<PostDetail> { backStackEntry ->
+    val route: PostDetail = backStackEntry.toRoute()
+    PostDetailScreen(postId = route.postId)
+}
+```
 
 ---
 
-## ⚠️ Common gotchas
+## ⚠️ Common Gotchas
 
-- **Use `collectAsStateWithLifecycle()`**, not `collectAsState()` — the latter keeps collecting
-  while the app is backgrounded, wasting work and risking leaks.
-- **Don't put one-time events in state.** Navigation and snackbars belong in MVI `Effect`s (a
-  `Channel`), otherwise they replay on every recomposition / config change.
-- **Bump `AppDatabase.DATABASE_VERSION` and add a `Migration`** whenever the schema changes. The
-  template deliberately omits `fallbackToDestructiveMigration()` so missing migrations fail loudly
-  instead of silently wiping user data.
-- **Keep the domain layer framework-free.** No Room/Retrofit/Android imports in `domain`.
-- **JDK 17 is required.** AGP 8.7 will not run on JDK 11.
-- **Inject dispatchers** (`@IoDispatcher`) instead of hard-coding `Dispatchers.IO`, so tests stay
-  deterministic.
+| Pitfall | Why It Matters | Fix |
+|---|---|---|
+| Using `collectAsState()` | Keeps collecting while app is backgrounded — wastes resources and risks leaks | Always use `collectAsStateWithLifecycle()` |
+| Putting navigation in state | Replays on every recomposition and config change | Use MVI `Effect`s (Channel) for one-time events |
+| Forgetting DB migrations | Silent data wipes are worse than crashes | Bump `DATABASE_VERSION` and add a `Migration` every schema change — `fallbackToDestructiveMigration()` is intentionally omitted |
+| Android imports in domain | Breaks the clean boundary — domain must be framework-free | No Room, Retrofit, or Android SDK imports in `domain.*` |
+| Hard-coding `Dispatchers.IO` | Makes unit tests non-deterministic | Inject `@IoDispatcher` via Hilt instead |
+| Running on JDK 11 | AGP 8.7 requires JDK 17 | Set `JAVA_HOME` to a JDK 17 installation |
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork and create a feature branch: `git checkout -b feature/my-feature`.
-2. Follow the existing package structure and the dependency direction described above.
-3. Keep public classes/functions documented with KDoc.
-4. Run `./gradlew lint testDebugUnitTest` before opening a PR.
-5. Open a PR describing the change and the pattern (MVVM/MVI) it follows.
+Contributions are welcome! Please follow the existing structure and patterns.
+
+```bash
+# 1. Fork and create a feature branch
+git checkout -b feature/my-feature
+
+# 2. Lint and test before opening a PR
+./gradlew lint testDebugUnitTest
+
+# 3. Open a PR describing:
+#    - What changed
+#    - Which pattern it follows (MVVM / MVI)
+#    - Why the change is needed
+```
+
+Guidelines:
+- Follow the existing package structure and the `presentation → domain → data` dependency direction.
+- Add KDoc to all public classes and functions.
+- Keep the domain layer framework-free.
+- One use case per class.
 
 ---
 
 ## 📄 License
 
-Released under the [MIT License](LICENSE).
+```
+MIT License
+
+Copyright (c) 2026 compose-clean-blueprint contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+```
+
+---
+
+<div align="center">
+
+Made with ❤️ for the Android community · Give it a ⭐ if it helped you ship faster
+
+</div>
