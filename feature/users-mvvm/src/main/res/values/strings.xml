@@ -1,0 +1,7 @@
+<resources>
+    <string name="title_user_list_mvvm">Users (MVVM)</string>
+    <string name="title_user_detail">User Detail</string>
+    <string name="action_back">Back</string>
+    <string name="label_email">Email: %1$s</string>
+    <string name="label_phone">Phone: %1$s</string>
+</resources>

@@ -8,9 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.composeclean.presentation.mvi.UserMviScreen
-import com.example.composeclean.presentation.mvvm.users.UserDetailScreen
-import com.example.composeclean.presentation.mvvm.users.UserListScreen
+import com.example.composeclean.core.navigation.NavRoute
+import com.example.composeclean.feature.users.mvi.UserMviScreen
+import com.example.composeclean.feature.users.mvvm.UserDetailScreen
+import com.example.composeclean.feature.users.mvvm.UserListScreen
 
 /**
  * Root navigation graph for the app.

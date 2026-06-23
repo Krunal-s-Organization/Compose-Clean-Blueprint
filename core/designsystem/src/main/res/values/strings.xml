@@ -1,0 +1,8 @@
+<resources>
+    <!-- Shared UI strings used by the reusable components in this module (and by feature
+         modules that reference this module's R class, e.g. UserDetailScreen). -->
+    <string name="action_retry">Retry</string>
+    <string name="content_desc_user_avatar">User avatar</string>
+    <string name="state_empty_users">No users found.</string>
+    <string name="state_generic_error">Something went wrong.</string>
+</resources>

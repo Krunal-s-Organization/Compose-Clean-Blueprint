@@ -26,7 +26,7 @@ datastore = "1.1.1"
 # Networking
 retrofit = "2.11.0"
 okhttp = "4.12.0"
-retrofitKotlinxConverter = "1.0.0"
+retrofitKotlinxConverter = "2.11.0"
 kotlinxSerialization = "1.7.3"
 
 # Async
@@ -40,7 +40,13 @@ junit = "4.13.2"
 androidxJunit = "1.2.1"
 espresso = "3.6.1"
 
+# DI (JSR-330 annotations used directly by pure-Kotlin modules)
+javaxInject = "1"
+
 [libraries]
+# Dependency Injection (plain JSR-330 annotation, no Android/Hilt runtime needed)
+javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInject" }
+
 # AndroidX core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
@@ -96,7 +102,9 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

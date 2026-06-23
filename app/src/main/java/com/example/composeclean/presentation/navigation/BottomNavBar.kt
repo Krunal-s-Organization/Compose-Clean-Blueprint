@@ -18,6 +18,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.composeclean.R
+import com.example.composeclean.core.navigation.NavRoute
 
 /**
  * The two top-level destinations surfaced in the bottom navigation bar. Each pairs a type-safe

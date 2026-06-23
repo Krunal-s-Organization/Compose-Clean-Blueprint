@@ -22,3 +22,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "ComposeCleanBlueprint"
 include(":app")
+include(":core:common")
+include(":core:domain")
+include(":core:navigation")
+include(":core:network")
+include(":core:database")
+include(":core:data")
+include(":core:designsystem")
+include(":feature:users-mvvm")
+include(":feature:users-mvi")

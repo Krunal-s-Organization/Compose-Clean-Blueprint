@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.composeclean.designsystem.theme.ComposeCleanTheme
 import com.example.composeclean.presentation.navigation.AppNavGraph
-import com.example.composeclean.ui.theme.ComposeCleanTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

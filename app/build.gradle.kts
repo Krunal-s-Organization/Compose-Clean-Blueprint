@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -22,9 +21,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        // Base URL exposed as a BuildConfig field so it can be swapped per build type.
-        buildConfigField("String", "BASE_URL", "\"https://jsonplaceholder.typicode.com/\"")
     }
 
     buildTypes {
@@ -52,7 +48,6 @@ android {
 
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 
     packaging {
@@ -62,17 +57,22 @@ android {
     }
 }
 
-// Export Room schemas so migrations can be diffed and tested across versions.
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-}
-
 dependencies {
+    // Feature modules
+    implementation(project(":feature:users-mvvm"))
+    implementation(project(":feature:users-mvi"))
+
+    // Core modules. :core:data is not referenced directly by any class in this module, but it
+    // (transitively bringing :core:network and :core:database) must be on the classpath so Hilt
+    // can aggregate their @Module bindings into this module's @HiltAndroidApp component.
+    implementation(project(":core:data"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:navigation"))
+
     // AndroidX core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
 
     // Compose (BOM keeps all Compose artifacts on a compatible version set)
@@ -90,29 +90,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
-
-    // Room
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-
-    // DataStore
-    implementation(libs.androidx.datastore.preferences)
-
-    // Networking
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.kotlinx.serialization.converter)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
-    implementation(libs.kotlinx.serialization.json)
-
-    // Coroutines
-    implementation(libs.kotlinx.coroutines.android)
-
-    // Image loading
-    implementation(libs.coil.compose)
 
     // Unit testing
     testImplementation(libs.junit)
