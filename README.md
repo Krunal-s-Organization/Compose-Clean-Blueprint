@@ -23,35 +23,7 @@ Clone it, rename the package, and start building features instead of wiring infr
 
 ## 🏛️ Architecture
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                            PRESENTATION                                │
-│                                                                        │
-│   MVVM                              MVI                                 │
-│   ┌────────────────────┐           ┌────────────────────────────────┐ │
-│   │ UserListScreen      │           │ UserMviScreen                  │ │
-│   │ UserListViewModel   │           │ UserMviViewModel               │ │
-│   │   → StateFlow<UiState>          │   → StateFlow<UserState>       │ │
-│   │                     │           │   → Channel<UserEffect>        │ │
-│   └─────────┬───────────┘           │   ← onIntent(UserIntent)       │ │
-│             │                       └───────────────┬────────────────┘ │
-│             └───────────────┬───────────────────────┘                  │
-└─────────────────────────────┼──────────────────────────────────────────┘
-                              │ calls use cases (depends on abstractions)
-┌─────────────────────────────▼──────────────────────────────────────────┐
-│                              DOMAIN                                      │
-│   model/User            (framework-free)                                │
-│   repository/UserRepository      (interface — the contract)             │
-│   usecase/GetUsersUseCase, GetUserByIdUseCase                           │
-└─────────────────────────────┬──────────────────────────────────────────┘
-                              │ implemented by
-┌─────────────────────────────▼──────────────────────────────────────────┐
-│                               DATA                                       │
-│   repository/UserRepositoryImpl   ← offline-first, emits Resource<T>     │
-│        ├── remote: UserApi (Retrofit) + UserDto                          │
-│        ├── local:  AppDatabase (Room) + UserDao + UserEntity             │
-│        └── mapper: UserMapper (DTO ⇄ Entity ⇄ Domain)                    │
-└──────────────────────────────────────────────────────────────────────-─┘
+<img width="1024" height="1536" alt="ChatGPT Image Jun 24, 2026, 12_58_25 AM" src="https://github.com/user-attachments/assets/4cc81ceb-1194-481e-843f-ad2e5256344a" />
 
 CORE (cross-cutting): common/Resource, common/UiState, network/*, di/*
 ```
